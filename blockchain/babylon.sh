@@ -27,7 +27,7 @@ install_go() {
     source .bash_profile
 }
 
-install_babylon_env() {
+install_babylon_env0() {
     read -e -p "请输入你的节点名称: " node_name
     sudo ufw allow 9100
     sudo ufw allow 26656
@@ -95,9 +95,28 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 EOF
 
+}
+install_babylon_env() {
+    install_babylon_env0
     echo -e "\n"
     echo -e "下面开始创建babylon钱包，会让你创建一个钱包密码..."
     babylond --keyring-backend test keys add wallet
+    sed -i -e "s|^key-name *=.*|key-name = \"wallet\"|" ~/.babylond/config/app.toml
+    sed -i -e "s|^timeout_commit *=.*|timeout_commit = \"30s\"|" ~/.babylond/config/config.toml
+    babylond create-bls-key $(babylond keys show wallet -a)
+    cat $HOME/.babylond/config/priv_validator_key.json
+    echo -e "\n"
+    echo -e "请保存上面创建好的钱包地址、私钥、助记词等信息..."
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable babylond.service
+}
+install_babylon_env_recover() {
+    install_babylon_env0
+    echo -e "\n"
+    echo -e "导入钱包"
+    read -e -p "请输入助记词: " mnemonic
+    babylond --keyring-backend test keys add wallet --recover ${mnemonic}
     sed -i -e "s|^key-name *=.*|key-name = \"wallet\"|" ~/.babylond/config/app.toml
     sed -i -e "s|^timeout_commit *=.*|timeout_commit = \"30s\"|" ~/.babylond/config/config.toml
     babylond create-bls-key $(babylond keys show wallet -a)
@@ -144,6 +163,8 @@ EOF
     --gas-adjustment="1.5" \
     --gas-prices="0.025ubbn" \
     --from=wallet
+    cat ~/validator.json
+    echo -e "请保存上面的验证信息"
 }
 
 echo && echo -e " ${Red_font_prefix}babylon节点 一键安装脚本${Font_color_suffix} by \033[1;35moooooyoung\033[0m
@@ -155,6 +176,7 @@ echo && echo -e " ${Red_font_prefix}babylon节点 一键安装脚本${Font_color
  ${Green_font_prefix} 3.检查节点状态 ${Font_color_suffix}
  ${Green_font_prefix} 4.显示同步日志 ${Font_color_suffix}
  ${Green_font_prefix} 5.成为验证者（需要等节点同步到最新区块） ${Font_color_suffix}
+ ${Green_font_prefix} 6.安装babylon节点环境（恢复钱包） ${Font_color_suffix}
  ———————————————————————" && echo
 read -e -p " 请参照教程执行以上步骤，请输入数字 [1-5]:" num
 case "$num" in
@@ -172,6 +194,9 @@ case "$num" in
     ;;
 5)
     start_validator_node
+    ;;
+5)
+    install_babylon_env_recover
     ;;
 *)
     echo
