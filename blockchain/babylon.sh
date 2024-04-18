@@ -178,7 +178,7 @@ echo && echo -e " ${Red_font_prefix}babylon节点 一键安装脚本${Font_color
  ${Green_font_prefix} 5.成为验证者（需要等节点同步到最新区块） ${Font_color_suffix}
  ${Green_font_prefix} 6.安装babylon节点环境（恢复钱包） ${Font_color_suffix}
  ———————————————————————" && echo
-read -e -p " 请参照教程执行以上步骤，请输入数字 [1-5]:" num
+read -e -p " 请参照教程执行以上步骤，请输入数字 [1-6]:" num
 case "$num" in
 1)
     install_babylon_env
