@@ -122,7 +122,7 @@ import_wallet(){
     echo -e "\n"
     echo -e "导入钱包"
     read -e -p "请输入助记词: " mnemonic
-    babylond --keyring-backend test keys add wallet --recover ${mnemonic}
+    babylond --keyring-backend test keys add wallet --recover "${mnemonic}"
     sed -i -e "s|^key-name *=.*|key-name = \"wallet\"|" ~/.babylond/config/app.toml
     sed -i -e "s|^timeout_commit *=.*|timeout_commit = \"30s\"|" ~/.babylond/config/config.toml
     babylond create-bls-key $(babylond keys show wallet -a)
