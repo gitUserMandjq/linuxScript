@@ -195,7 +195,7 @@ case "$num" in
 5)
     start_validator_node
     ;;
-5)
+6)
     install_babylon_env_recover
     ;;
 *)
