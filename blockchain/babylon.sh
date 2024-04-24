@@ -98,6 +98,9 @@ EOF
 }
 install_babylon_env() {
     install_babylon_env0
+    new_wallet
+}
+new_wallet(){
     echo -e "\n"
     echo -e "下面开始创建babylon钱包，会让你创建一个钱包密码..."
     babylond --keyring-backend test keys add wallet
@@ -113,10 +116,12 @@ install_babylon_env() {
 }
 install_babylon_env_recover() {
     install_babylon_env0
+    import_wallet
+}
+import_wallet(){
     echo -e "\n"
     echo -e "导入钱包"
-    read -e -p "请输入助记词: " mnemonic
-    babylond --keyring-backend test keys add wallet --recover ${mnemonic}
+    babylond --keyring-backend test keys add wallet --recover
     sed -i -e "s|^key-name *=.*|key-name = \"wallet\"|" ~/.babylond/config/app.toml
     sed -i -e "s|^timeout_commit *=.*|timeout_commit = \"30s\"|" ~/.babylond/config/config.toml
     babylond create-bls-key $(babylond keys show wallet -a)
@@ -177,8 +182,9 @@ echo && echo -e " ${Red_font_prefix}babylon节点 一键安装脚本${Font_color
  ${Green_font_prefix} 4.显示同步日志 ${Font_color_suffix}
  ${Green_font_prefix} 5.成为验证者（需要等节点同步到最新区块） ${Font_color_suffix}
  ${Green_font_prefix} 6.安装babylon节点环境（恢复钱包） ${Font_color_suffix}
+ ${Green_font_prefix} 7.导入钱包 ${Font_color_suffix}
  ———————————————————————" && echo
-read -e -p " 请参照教程执行以上步骤，请输入数字 [1-6]:" num
+read -e -p " 请参照教程执行以上步骤，请输入数字 [1-7]:" num
 case "$num" in
 1)
     install_babylon_env
@@ -197,6 +203,9 @@ case "$num" in
     ;;
 6)
     install_babylon_env_recover
+    ;;
+7)
+    import_wallet
     ;;
 *)
     echo
