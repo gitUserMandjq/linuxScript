@@ -1,0 +1,1 @@
+docker exec -it mysql mysqldump --default-character-set=utf8mb4 --single-transaction -uroot -pens_search2022 --all-databases > /data/docker/mysql-back/alldatabases.sql
