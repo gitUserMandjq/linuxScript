@@ -1,6 +1,6 @@
 #! /bin/bash
-source /root/.bashrc
-url='204.12.203.253:82'
+#定时器脚本里不会自动获取环境变量，需要手动执行
+source /etc/profile
 OLDIFS="$IFS"
 IFS=$'\n'
 for line in $(echo 6|./Quili.sh|grep -E 'Version|Unclaimed balance');do
@@ -16,6 +16,6 @@ for line in $(echo 6|./Quili.sh|grep -E 'Version|Unclaimed balance');do
 	fi
 done
 IFS="$OLD_IFS"
-path=$url'/web_crawler/eth/node/updateQuiliBalance?nodeName='$nodeName'&version='$version'&balance='$balance
+path=$monitorUrl'/web_crawler/eth/node/updateQuiliBalance?nodeName='$nodeName'&version='$version'&balance='$balance
 echo 'curl '$path
 curl $path
