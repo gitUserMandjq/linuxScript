@@ -1,4 +1,5 @@
 #! /bin/bash
+source /root/.bashrc
 url='204.12.203.253:82'
 OLDIFS="$IFS"
 IFS=$'\n'
