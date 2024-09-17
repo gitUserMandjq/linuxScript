@@ -28,7 +28,7 @@ log "日志文件大小为: $(echo "scale=2; $FILESIZE / (1024 * 1024)" | bc) MB
 if [ $FILESIZE -gt 10485760 ]; then
     log "日志文件大于10MB，将清空: $FILE_PATH"
     # 清空文件
-    > "$FILE_PATH"
+    truncate -s 0 "$FILE_PATH"
 else
     log "日志文件小于或等于10MB，保留: $FILE_PATH"
 fi
