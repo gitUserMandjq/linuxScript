@@ -62,7 +62,7 @@ if [[ "$isBackup" == "true" ]]; then
             send \"$password\r\"
         }
         expect \"Exit status 0\" {
-            exec bash -c \"curl $monitorUrl/web_crawler/eth/node/finishBackup?nodeName=\$nodeName\"
+            exec bash -c \"curl $monitorUrl/web_crawler/eth/node/finishBackup?nodeName=$nodeName\"
         }
         expect {
             timeout {
