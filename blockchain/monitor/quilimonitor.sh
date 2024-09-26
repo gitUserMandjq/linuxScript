@@ -42,7 +42,6 @@ log 'curl '$path1
 result=$(curl $path1)
 log $result
 isBackup=$(echo $result|grep -oP '"isBackup":(true|false)'| awk -F':' '{print $2}')
-isBackup=$(echo $result|grep -oP '"isBackup":(true|false)'| awk -F':' '{print $2}')
 log 'isBackup:'$isBackup
 if [[ "$isBackup" == "true" ]]; then
     log "开始备份"
