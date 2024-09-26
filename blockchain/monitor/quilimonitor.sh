@@ -52,17 +52,15 @@ if [[ "$isBackup" == "true" ]]; then
     password=$(echo $result|grep -oP '"password":\K[^,}]*'| sed 's/"//g')
     filePath=$(echo $result|grep -oP '"filePath":\K[^,}]*'| sed 's/"//g')
     sshCommand="ssh -p 22 -o StrictHostKeyChecking=no \"$user@$ip\" \"mkdir -p \\\"$filePath/$nodeName\\\"\""
-    scpCommand="scp -P 22 -o StrictHostKeyChecking=no -r /root/backup/config.tar.gz $user@$ip:$filePath/$nodeName"
+    scpCommand="scp -v -P 22 -o StrictHostKeyChecking=no -r /root/backup/config.tar.gz $user@$ip:$filePath/$nodeName"
     log $sshCommand
     log $password
     expect <<EOF
         set timeout 30
         spawn $sshCommand
-        expect {
-        	"*password:" {
+        expect "*password:" {
             send "$password\r"
             puts "#####send password"
-        	}
         }
         expect eof
 EOF
@@ -71,19 +69,16 @@ EOF
     expect <<EOF
         set timeout 30
         spawn $scpCommand
-        expect {
-        	"*password:" {
+        expect "*password:" {
             send "$password\r"
             puts "#####send password"
-            exp_continue
-        	}
-        }
-        expect "*100%*" {
-            puts "#####finishBackup"
-            exec bash -c "curl $monitorUrl/web_crawler/eth/node/finishBackup?nodeName=$nodeName"
         }
         expect eof
 EOF
+	if [ $? -eq 0 ]; then
+	  log "备份成功"
+		curl $monitorUrl/web_crawler/eth/node/finishBackup?nodeName=$nodeName
+	fi
     log "结束备份"
 else
     log "不用备份"
