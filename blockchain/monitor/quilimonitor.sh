@@ -22,6 +22,8 @@ done
 FILE_PATH="/var/log/quili.log"
 increment=$(tail -n 100 $FILE_PATH|grep -a 'increment'|tail -n 1|grep -oP '"increment":[0-9]+'| awk -F':' '{print $2}')
 time_taken=$(tail -n 100 $FILE_PATH|grep -a 'time_taken'|tail -n 1|grep -oP '"time_taken":\K[^,}]*')
+processNum=$(ps -aux|grep '/root/ceremonyclient'|wc -l)
+nproc=$(nproc)
 # 获取文件大小（以字节为单位）
 FILESIZE=$(stat -c %s "$FILE_PATH")
 log "日志文件大小为: $(echo "scale=2; $FILESIZE / (1024 * 1024)" | bc) MB"
@@ -34,7 +36,8 @@ else
     log "日志文件小于或等于10MB，保留: $FILE_PATH"
 fi
 IFS="$OLD_IFS"
-path=$monitorUrl'/web_crawler/eth/node/updateQuiliBalance?nodeName='$nodeName'&version='$version'&balance='$balance'&increment='$increment'&time_taken='$time_taken
+path=$monitorUrl'/web_crawler/eth/node/updateQuiliBalance?nodeName='$nodeName'&version='$version'&balance='$balance'&increment='$increment\
+'&time_taken='$time_taken'&processNum='$processNum'&nproc='$nproc
 log 'curl '$path
 curl $path
 #自动备份
