@@ -51,6 +51,13 @@ if [[ "$isBackup" == "true" ]]; then
     log "开始备份"
     mkdir -p /root/backup
     tar -czvf  /root/backup/config.tar.gz /root/ceremonyclient/node/.config
+    if ! tar -tzvf "/root/backup/config.tar.gz" &>/dev/null; then
+        log "文件不完整或损坏。"
+        exit 1
+    else
+        log "文件完整。"
+        exit 0
+    fi
     ip=$(echo $result|grep -oP '"ip":\K[^,}]*'| sed 's/"//g')
     user=$(echo $result|grep -oP '"user":\K[^,}]*'| sed 's/"//g')
     password=$(echo $result|grep -oP '"password":\K[^,}]*'| sed 's/"//g')
