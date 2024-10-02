@@ -56,7 +56,6 @@ if [[ "$isBackup" == "true" ]]; then
         exit 1
     else
         log "文件完整。"
-        exit 0
     fi
     ip=$(echo $result|grep -oP '"ip":\K[^,}]*'| sed 's/"//g')
     user=$(echo $result|grep -oP '"user":\K[^,}]*'| sed 's/"//g')
