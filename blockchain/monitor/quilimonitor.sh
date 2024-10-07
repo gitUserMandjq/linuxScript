@@ -66,7 +66,7 @@ if [[ "$isBackup" == "true" ]]; then
     log $sshCommand
     log $password
     expect <<EOF
-        set timeout 30
+        set timeout 600
         spawn $sshCommand
         expect "*password:" {
             send "$password\r"
@@ -77,7 +77,7 @@ EOF
     log $scpCommand
     log $password
     expect <<EOF
-        set timeout 30
+        set timeout 600
         spawn $scpCommand
         expect "*password:" {
             send "$password\r"
