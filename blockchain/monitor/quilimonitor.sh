@@ -6,14 +6,14 @@ function log(){
 source /etc/profile
 OLDIFS="$IFS"
 IFS=$'\n'
-for line in $(echo 6|./Quili.sh|grep -E 'Version|Unclaimed balance');do
+for line in $(echo 6|./Quili.sh|grep -E 'Version|Owned balance');do
 	IFS=':'
 	array=(${line})
 	echo "${array[0]}""${array[1]}"
 	if [ "${array[0]}" == "Version" ]
 	then
 		version=`echo ${array[1]}| xargs`
-	elif [ "${array[0]}" == "Unclaimed balance" ]
+	elif [ "${array[0]}" == "Owned balance" ]
 	then
 		balance=`echo ${array[1]/ QUIL/}| xargs`
 	fi
