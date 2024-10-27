@@ -21,7 +21,7 @@ done
 
 FILE_PATH="/var/log/quili.log"
 increment=$(tail -n 100 $FILE_PATH|grep -a 'increment'|tail -n 1|grep -oP '"increment":[0-9]+'| awk -F':' '{print $2}')
-time_taken=$(tail -n 100 $FILE_PATH|grep -a 'time_taken'|tail -n 1|grep -oP '"time_taken":\K[^,}]*')
+frame_number=$(tail -n 100 $FILE_PATH|grep -a 'frame_number'|tail -n 1|grep -oP '"frame_number":\K[^,}]*')
 processNum=$(ps -aux|grep '/root/ceremonyclient'|wc -l)
 nproc=$(nproc)
 # 获取文件大小（以字节为单位）
@@ -37,7 +37,7 @@ else
 fi
 IFS="$OLD_IFS"
 path=$monitorUrl'/web_crawler/eth/node/updateQuiliBalance?nodeName='$nodeName'&version='$version'&balance='$balance'&increment='$increment\
-'&time_taken='$time_taken'&processNum='$processNum'&nproc='$nproc
+'&frame_number='$frame_number'&processNum='$processNum'&nproc='$nproc
 log 'curl '$path
 curl $path
 #自动备份
