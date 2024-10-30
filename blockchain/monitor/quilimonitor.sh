@@ -79,17 +79,33 @@ EOF
     expect <<EOF
         set timeout 600
         spawn $scpCommand
-        expect "*password:" {
-            send "$password\r"
-            puts "#####send password"
+        expect {
+	        "*password:" {
+	            send "$password\r"
+	            puts "#####send password"
+	        }
         }
-        expect eof
+        expect {
+                eof {
+                    puts "Process completed successfully"
+                    exit 0
+                }
+                timeout {
+                    puts "Timeout occurred"
+                    exit 1
+                }
+	}
+
 EOF
 	if [ $? -eq 0 ]; then
 	  log "备份成功"
 		curl $monitorUrl/web_crawler/eth/node/finishBackup?nodeName=$nodeName
+	else
+	  log "备份超时"
+		curl $monitorUrl/web_crawler/eth/node/errorBackup?nodeName=$nodeName
 	fi
     log "结束备份"
 else
     log "不用备份"
 fi
+
